@@ -23,6 +23,6 @@ jobs:
 
   release:
     uses: mixmaxhq/github-workflows/.github/workflows/release.yml@main
-    environment: release
+    needs: checks
     secrets: inherit
 ```

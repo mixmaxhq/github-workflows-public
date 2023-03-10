@@ -1,0 +1,35 @@
+on:
+  workflow_call:
+    inputs: {}
+    secrets: {}
+
+permissions: {}
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v3
+        with:
+          # Required for commitlint
+          fetch-depth: 0
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run ci
+
+      - name: Run commitlint
+        run: npm run --if-present ci:commitlint
+        env:
+          CHANGE_TARGET: ${{ github.base_ref }}
+          CHANGE_ID: ${{ github.event.number }}
+          GIT_COMMIT: ${{ github.sha }}
