@@ -1,0 +1,38 @@
+on:
+  workflow_call:
+    inputs: {}
+    secrets:
+      gh_token:
+        required: false
+      npm_token:
+        required: false
+
+permissions: {}
+
+jobs:
+  publish:
+    runs-on: ubuntu-22.04
+    if: github.ref == 'refs/heads/master'
+    timeout-minutes: 30
+    environment: release
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v3
+        with:
+          # Required for semantic-release
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run semantic-release
+        run: npm run semantic-release --if-present
+        env:
+          NPM_TOKEN: ${{ secrets.npm_token }}
+          GITHUB_TOKEN: ${{ secrets.gh_token }}

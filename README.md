@@ -19,10 +19,10 @@ on:
 
 jobs:
   checks:
-    uses: mixmaxhq/github-workflows/.github/workflows/checks.yml@main
+    uses: mixmaxhq/github-workflows-public/.github/workflows/checks.yml@main
 
   release:
-    uses: mixmaxhq/github-workflows/.github/workflows/release.yml@main
-    environment: release
+    uses: mixmaxhq/github-workflows-public/.github/workflows/release.yml@main
+    needs: checks
     secrets: inherit
 ```
