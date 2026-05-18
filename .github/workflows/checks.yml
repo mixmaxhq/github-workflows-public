@@ -1,7 +1,10 @@
 on:
   workflow_call:
     inputs: {}
-    secrets: {}
+    secrets:
+      NPM_TOKEN:
+        description: 'npm token for installing private @scope packages. Optional - only needed if package.json depends on private packages.'
+        required: false
 
 permissions:
   contents: read
@@ -39,6 +42,7 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: ${{ steps.pm.outputs.manager }}
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: |
@@ -47,6 +51,8 @@ jobs:
           else
             npm ci
           fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Run tests
         run: $PACKAGE_MANAGER run ci
