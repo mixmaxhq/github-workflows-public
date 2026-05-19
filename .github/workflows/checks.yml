@@ -3,8 +3,7 @@ on:
     inputs: {}
     secrets: {}
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   test:
